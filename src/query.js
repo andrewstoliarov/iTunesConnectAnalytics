@@ -295,6 +295,11 @@ var Query = function(appId, config) {
 Query.prototype.metrics = function() {
   this.endpoint = '/data/time-series';
 
+  if(this.config['csv']) {
+    console.log("Metrics called with csv. Experimental.")
+    this.endpoint = `${this.endpoint}-csv`
+  }
+
   var keys = ['limit', 'dimension'];
   for (var i = 0; i < keys.length; ++i) {
     var key = keys[i];

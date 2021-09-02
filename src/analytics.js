@@ -37,6 +37,13 @@ Itunes.prototype.executeRequest = function(task, callback) {
 
   const requestBody = query.assembleBody();
   const uri = url.parse(query.apiURL + query.endpoint);
+
+  if(requestBody.csv) {
+    var isCSVRequest = true
+    delete requestBody.csv
+    var params = new URLSearchParams({data: JSON.stringify(requestBody)}).toString()
+  }
+
   const config = {
     uri: uri,
     headers: this.getHeaders(),
@@ -44,6 +51,11 @@ Itunes.prototype.executeRequest = function(task, callback) {
     json: requestBody,
     resolveWithFullResponse: true
   };
+
+  if(isCSVRequest) {
+    delete config.json
+    config['form'] = params
+  }
 
   request.post(config).then(response => {
     completed(null, response.body)
